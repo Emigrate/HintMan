@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
+		<item name = "android:actionBarStyle" >@style/MyActionBar</item>
+		<item name = "android:actionBarTabTextStyle" >@style/TabTextStyle</item>
+		<item name = "android:actionMenuTextColor" >@android:color/white</item>
+		<item name = "android:windowBackground">@color/window.background</item>
+		<!-- Support library compatibility -->
+		<item name = "actionBarStyle" >@style/MyActionBar</item>
+		<item name = "actionBarTabTextStyle" >@style/TabTextStyle</item>
+		<item name = "actionMenuTextColor" >@android:color/white</item>
+		<item name = "android:statusBarColor">@color/window.background</item>
+	
+	 	<item name="colorPrimary">@color/window.background</item>
+		<item name="colorPrimaryDark">@color/background</item>
+
+		<item name="android:actionModeStyle">@style/ActionMode.Material</item>
+    </style>
+	
+	<style name="AppTheme.NoBar" parent="@style/Theme.AppCompat.NoActionBar">
+		
+	 	<item name="colorPrimary">@color/window.background</item>
+		<item name="colorPrimaryDark">@color/background</item>
+
+   </style>
+
+	<style name="ActionMode.Material" parent="@style/Widget.AppCompat.ActionMode">
+		<item name="android:background">@color/window.background</item>
+
+    </style>
+	
+	<!-- general styles for the action bar -->
+	<style name="MyActionBar" parent= "@style/Widget.AppCompat.ActionBar">
+		<item name = "android:titleTextStyle" >@style/TitleTextStyle</item>
+		<item name = "android:subtitleTextStyle" >@style/SubTitleTextStyle</item>
+		<item name = "android:background" >@color/window.background</item>
+		<item name = "android:backgroundStacked" >@color/window.background</item>
+		<item name = "android:backgroundSplit" >@color/window.background</item>
+		
+		<!-- Support library compatibility -->
+		<item name = "titleTextStyle" >@style/TitleTextStyle</item>
+	
+		<item name = "background" >@color/window.background</item>
+		<item name = "backgroundStacked" >@color/window.background</item>
+		<item name = "backgroundSplit" >@color/window.background</item>
+	</style>
+	
+	
+	<style name="SpinnerDropDown" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+	<!-- action bar title text -->
+	<style name="TitleTextStyle" parent= "@style/TextAppearance.AppCompat.Widget.ActionBar.Title" >
+		<item name = "android:textColor" >@android:color/white</item>
+	</style>
+	<style name="SubTitleTextStyle" parent= "@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle" >
+		<item name = "android:textColor" >@android:color/white</item>
+	</style>
+	<!-- action bar tab text -->
+	<style name="TabTextStyle" parent= "@style/Widget.AppCompat.ActionBar.TabText" >
+		<item name = "android:textColor" >@android:color/white</item>
+	</style>
+	<style name="SpinnerTextStyle" parent="@style/TextAppearance.AppCompat.Widget.DropDownItem">	
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+</resources>

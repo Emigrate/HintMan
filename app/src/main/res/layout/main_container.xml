@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:background="#ffffff"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:background="@drawable/background"
+		android:padding="10dip"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+
+		<ImageView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:paddingBottom="30dip"
+			android:src="@drawable/logo"/>
+
+		<com.colleagues.hintman.view.CustomAutoCompleteView
+			android:id="@+id/myautocomplete"
+			android:layout_gravity="bottom"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:hint="Начните поиск..."
+			android:completionThreshold="1">
+
+		</com.colleagues.hintman.view.CustomAutoCompleteView>
+
+		<ImageView
+			android:id="@+id/main_containerImageView"
+			android:layout_gravity="right"
+			android:layout_marginRight="20dip"
+			android:layout_marginTop="-30dip"
+			android:layout_height="50dip"
+			android:layout_width="50dip"
+			android:src="@drawable/cancel"/>
+	</LinearLayout>
+	
+	
+	<FrameLayout
+		
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content">
+
+		<FrameLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/main_containerFrameLayout">
+
+		</FrameLayout>
+		<GridView
+			android:background="#cccccc"
+			android:visibility="gone"
+			android:clipToPadding="false"
+			android:fitsSystemWindows="true"
+			android:layout_height="wrap_content"
+			android:id="@+id/mainGridView"
+			android:layout_width="match_parent"
+			android:scrollbarStyle="outsideOverlay"
+			android:gravity="center"
+			android:padding="4.0dip"
+			android:scrollbars="none"
+			android:drawSelectorOnTop="true"
+			android:stretchMode="columnWidth"
+			android:numColumns="auto_fit"/>
+		
+
+	</FrameLayout>
+
+</LinearLayout>
+
