@@ -97,7 +97,7 @@ public class MainListFragment extends BaseFragment
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
-			
+			if(result != null){
 			JSONParser parser = new JSONParser();
 			ArrayList<Hint>list = parser.getHintsList(result);
 			adapter = new RecyclerViewAdapter(context, list);
@@ -112,7 +112,7 @@ public class MainListFragment extends BaseFragment
 				}
 				catch (JSONException e)
 				{}
-			
+			}
 		}
 		
 		

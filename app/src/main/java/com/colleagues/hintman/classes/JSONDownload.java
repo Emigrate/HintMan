@@ -9,20 +9,14 @@ import org.apache.http.impl.client.*;
 import org.json.*;
 
 public class JSONDownload extends BaseDownload
- {
+{
 
-	static InputStream is = null;
-	static JSONObject jObj = null;
-	static String json = "";
-	
-	// constructor
-	public JSONDownload() {}
-
-	public JSONObject getJSONFromUrl(String url) {
-
-		// Making HTTP request
+	@Override
+	public InputStream getInputStrin()
+	{
+		InputStream is = null;
 		try {
-			// defaultHttpClient
+
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpPost = new HttpGet(this.url + url);
 
@@ -37,31 +31,8 @@ public class JSONDownload extends BaseDownload
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-														   is, "UTF-8"), 8);
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-			json = sb.toString();
-			Log.e("hint", "json: " + json);
-		} catch (Exception e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
-		}
-
-		// try parse the string to a JSON object
-		try {
-			jObj = new JSONObject(json);
-		} catch (JSONException e) {
-			Log.e("JSON Parser", "Error parsing data " + e.toString());
-		}
-
-		// return JSON String
-		return jObj;
-
+		
+		return is;
 	}
+
 }

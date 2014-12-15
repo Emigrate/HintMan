@@ -16,12 +16,7 @@ import org.apache.http.client.entity.*;
 
 public class JSONEVote extends BaseDownload
 {
-	SharedPreferences prefs;
-	SharedPreferences.Editor e;
-	static InputStream is = null;
-	static JSONObject jObj = null;
-	static String json = "";
-	Context context;
+	
 	long userId;
 	String value;
 	String auth_token;
@@ -33,14 +28,14 @@ public class JSONEVote extends BaseDownload
 		this.userId=groupId;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		auth_token = prefs.getString("auth_token", "");
-		Log.e("hint", ""+ userId +" "+ value+" " + auth_token);
 	}
-
-	public JSONObject getJSONFromUrl(String url) {
-
-		// Making HTTP request
+	
+	@Override
+	public InputStream getInputStrin()
+	{
+		InputStream is = null;
 		try {
-			// defaultHttpClient
+			
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(this.url + url);
 
@@ -62,30 +57,6 @@ public class JSONEVote extends BaseDownload
 			e.printStackTrace();
 		}
 
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-														   is, "UTF-8"), 8);
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-			json = sb.toString();
-			Log.e("hint", "jsonVote: " + json);
-		} catch (Exception e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
-		}
-
-		// try parse the string to a JSON object
-		try {
-			jObj = new JSONObject(json);
-		} catch (JSONException e) {
-			Log.e("JSON Parser", "Error parsing data " + e.toString());
-		}
-
-		// return JSON String
-		return jObj;
-
+		return is;
 	}
 }
