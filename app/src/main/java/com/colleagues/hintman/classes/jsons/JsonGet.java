@@ -1,4 +1,4 @@
-package com.colleagues.hintman.classes;
+package com.colleagues.hintman.classes.jsons;
 
 import android.util.*;
 import java.io.*;
@@ -8,7 +8,7 @@ import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.*;
 import org.json.*;
 
-public class JSONDownload extends BaseDownload
+public class JsonGet extends BaseDownload
 {
 
 	@Override

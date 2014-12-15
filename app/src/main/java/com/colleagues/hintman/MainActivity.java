@@ -1,23 +1,22 @@
 package com.colleagues.hintman;
 
+import android.content.*;
 import android.os.*;
+import android.preference.*;
+import android.support.v4.app.*;
+import android.view.*;
+import android.view.View.*;
 import android.widget.*;
 import com.colleagues.hintman.activity.*;
+import com.colleagues.hintman.classes.*;
+import com.colleagues.hintman.classes.tasks.*;
 import com.colleagues.hintman.fragments.*;
 import com.colleagues.hintman.objects.*;
 import com.colleagues.hintman.view.*;
-import java.util.*;
-
-import com.colleagues.hintman.activity.BaseActivity;
-import android.view.*;
-import org.json.*;
-import com.colleagues.hintman.classes.*;
 import java.net.*;
-import android.support.v4.app.*;
-import android.content.*;
-import android.view.View.*;
-import com.parse.*;
-import android.preference.*;
+import java.util.*;
+import org.json.*;
+import com.colleagues.hintman.classes.jsons.*;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -113,7 +112,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 			return;
 		}
 		saveGroup(groupId, searchTerm);
-		readSearchTask = new ReadSearchTask();
+		readSearchTask = new ReadSearchTask(this);
 		readSearchTask.execute("api/v1/groups.json?limit=10&q=" + URLEncoder.encode(searchTerm));
     }
 	
@@ -136,15 +135,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 	
 	
 	
-	public class ReadSearchTask extends JSONTask
+	public class ReadSearchTask extends BaseTask
 	{
-		
+		public ReadSearchTask(Context context){
+			super(context, new JsonGet());
+		}
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
 		
 			super.onPostExecute(result);
-			
+			if(result != null){
 			JSONParser parser = new JSONParser();
 			items = parser.getGroupList(result);
 			
@@ -154,7 +155,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 			myAdapter.notifyDataSetChanged();
 			myAdapter = new SearchQueriAdapter(MainActivity.this, R.layout.row, items);
 			myListView.setAdapter(myAdapter);
-			
+			}
 		}
 		
 	}

@@ -1,4 +1,4 @@
-package com.colleagues.hintman.classes;
+package com.colleagues.hintman.classes.jsons;
 
 import android.content.*;
 import android.util.*;
@@ -28,22 +28,7 @@ public abstract class BaseDownload
 
 	public JSONObject getJSONFromUrl(String url) {
 
-		try {
-
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpPost = new HttpGet(this.url + url);
-
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-			HttpEntity httpEntity = httpResponse.getEntity();
-			is = httpEntity.getContent();
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		is = getInputStrin();
 
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);

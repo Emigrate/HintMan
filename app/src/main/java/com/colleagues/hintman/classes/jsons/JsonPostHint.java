@@ -1,4 +1,4 @@
-package com.colleagues.hintman.classes;
+package com.colleagues.hintman.classes.jsons;
 
 import android.util.*;
 import java.io.*;
@@ -13,19 +13,23 @@ import android.preference.*;
 import java.util.*;
 import org.apache.http.message.*;
 import org.apache.http.client.entity.*;
+import java.net.*;
 
-public class JSONPost extends BaseDownload
+public class JsonPostHint extends BaseDownload
 {
 	long groupId;
+	long userId;
 	String deviceId;
 	String auth_token;
-	
-	public JSONPost(Context context, long groupId) {
+	String content;
+
+	public JsonPostHint(Context context, long groupId, String content) {
 		this.context = context;
 		this.groupId=groupId;
-		deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		this.content = content;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		auth_token = prefs.getString("auth_token", "");
+		userId = prefs.getLong("_user_id", 0);
 	}
 
 	@Override
@@ -33,15 +37,16 @@ public class JSONPost extends BaseDownload
 	{
 		InputStream is = null;
 		try {
-			
+
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(this.url + url);
 
 			List<NameValuePair> nameValues = new ArrayList<NameValuePair>(3);
 			nameValues.add(new BasicNameValuePair("group_id",String.valueOf(groupId)));
 			nameValues.add(new BasicNameValuePair("auth_token",auth_token));
-			nameValues.add(new BasicNameValuePair("device_id",deviceId));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValues));
+			nameValues.add(new BasicNameValuePair("user_id",String.valueOf(userId)));
+			nameValues.add(new BasicNameValuePair("content", content));
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValues, "UTF-8"));
 
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			HttpEntity httpEntity = httpResponse.getEntity();
@@ -56,4 +61,5 @@ public class JSONPost extends BaseDownload
 		}
 		return is;
 	}
+
 }

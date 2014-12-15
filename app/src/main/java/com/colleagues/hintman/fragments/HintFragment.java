@@ -1,15 +1,17 @@
 package com.colleagues.hintman.fragments;
-import android.view.*;
-import android.os.*;
-import com.colleagues.hintman.*;
-import android.widget.*;
-import com.colleagues.hintman.classes.*;
-import org.json.*;
-import com.colleagues.hintman.objects.*;
-import android.util.*;
-import android.view.View.*;
-import android.content.*;
 import android.app.*;
+import android.content.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import com.colleagues.hintman.*;
+import com.colleagues.hintman.classes.*;
+import com.colleagues.hintman.classes.tasks.*;
+import com.colleagues.hintman.objects.*;
+import org.json.*;
+import com.colleagues.hintman.classes.jsons.*;
 
 public class HintFragment extends BaseFragment
 {
@@ -68,29 +70,31 @@ public class HintFragment extends BaseFragment
 	
 	private void getHint(){
 		String url = "api/v1/hints/" + id +".json?auth_token=" + auth + "&"+"user_id=" +userId;
-		hintTask = new HintTask();
+		hintTask = new HintTask(activity);
 		hintTask.execute(url);
 		Log.e("hint", "url: " + url);
 	}
 	
-	public class HintTask extends JSONTask
+	public class HintTask extends BaseTask
 	{
 
+		public HintTask(Context context){
+			super(context, new JsonGet());
+		}
+		
 		@Override
 		protected void onPreExecute()
 		{
 			super.onPreExecute();
-			Log.e("hint", "start");
+			
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
-			Log.e("hint","res: " + result);
 			JSONParser parser = new JSONParser();
 			setUiData(parser.getHint(result));
-			Log.e("hint","stop");
 		}
 		
 		
@@ -101,12 +105,12 @@ public class HintFragment extends BaseFragment
 		new VoteTask(activity, userId, vote).execute("api/v1/hints/" + id+ "/vote.json");
 	}
 	
-	public class VoteTask extends JSONVoteTask{
+	public class VoteTask extends BaseTask{
 		
 		ProgressDialog progress;
 		
 		public VoteTask(Context context, long userId, String value){
-			super(context, userId, value);
+			super(context, new JsonPostVote(context, userId,value));
 			progress = new ProgressDialog(context);
 			progress.setMessage("Подождите...");
 			progress.setCancelable(false);
@@ -115,7 +119,6 @@ public class HintFragment extends BaseFragment
 		@Override
 		protected void onPreExecute()
 		{
-			// TODO: Implement this method
 			super.onPreExecute();
 			progress.show();
 		}
@@ -125,7 +128,6 @@ public class HintFragment extends BaseFragment
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
-			// TODO: Implement this method
 			super.onPostExecute(result);
 			JSONParser parser = new JSONParser();
 			setUiData(parser.getHint(result));

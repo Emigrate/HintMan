@@ -1,4 +1,4 @@
-package com.colleagues.hintman.classes;
+package com.colleagues.hintman.classes.jsons;
 
 import android.util.*;
 import java.io.*;
@@ -14,15 +14,14 @@ import java.util.*;
 import org.apache.http.message.*;
 import org.apache.http.client.entity.*;
 
-public class JSONEVote extends BaseDownload
+public class JsonPostVote extends BaseDownload
 {
 	
 	long userId;
 	String value;
 	String auth_token;
 
-	// constructor
-	public JSONEVote(Context context, long groupId, String value) {
+	public JsonPostVote(Context context, long groupId, String value) {
 		this.value = value;
 		this.context = context;
 		this.userId=groupId;

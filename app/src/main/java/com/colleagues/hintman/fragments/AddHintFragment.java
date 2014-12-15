@@ -1,13 +1,14 @@
 package com.colleagues.hintman.fragments;
-import android.view.*;
-import android.os.*;
-import com.colleagues.hintman.*;
-import android.widget.*;
-import com.colleagues.hintman.classes.*;
-import android.content.*;
-import org.json.*;
-import android.view.View.*;
 import android.app.*;
+import android.content.*;
+import android.os.*;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import com.colleagues.hintman.*;
+import com.colleagues.hintman.classes.tasks.*;
+import org.json.*;
+import com.colleagues.hintman.classes.jsons.*;
 
 public class AddHintFragment extends BaseFragment
 {
@@ -46,11 +47,11 @@ public class AddHintFragment extends BaseFragment
 			});
 	}
 	
-	public class AddHintTask extends JSONAddHintTask{
+	public class AddHintTask extends BaseTask{
 		ProgressDialog dialog;
 		
 		public AddHintTask(Context context, long groupId, String content){
-			super(context, groupId, content);
+			super(context, new JsonPostHint(context, groupId, content));
 			dialog = new ProgressDialog(activity);
 			dialog.setMessage("Подождите...");
 			dialog.setCancelable(false);
@@ -59,7 +60,6 @@ public class AddHintFragment extends BaseFragment
 		@Override
 		protected void onPreExecute()
 		{
-			// TODO: Implement this method
 			super.onPreExecute();
 			dialog.show();
 		}
@@ -67,7 +67,6 @@ public class AddHintFragment extends BaseFragment
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
-			// TODO: Implement this method
 			super.onPostExecute(result);
 			dialog.dismiss();
 			if(result != null){

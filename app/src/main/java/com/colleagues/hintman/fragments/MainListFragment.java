@@ -1,19 +1,17 @@
 package com.colleagues.hintman.fragments;
 import android.content.*;
-import android.graphics.*;
 import android.os.*;
 import android.support.v7.widget.*;
-import android.text.*;
-import android.util.*;
 import android.view.*;
-import android.view.animation.*;
 import android.widget.*;
 import com.colleagues.hintman.*;
 import com.colleagues.hintman.classes.*;
+import com.colleagues.hintman.classes.tasks.*;
 import com.colleagues.hintman.objects.*;
 import com.colleagues.hintman.view.*;
 import java.util.*;
 import org.json.*;
+import com.colleagues.hintman.classes.jsons.*;
 
 public class MainListFragment extends BaseFragment
 {
@@ -76,12 +74,12 @@ public class MainListFragment extends BaseFragment
 	
 	
 	
-	public class MyJsonTack extends JSONPostTask
+	public class MyJsonTack extends BaseTask
 	{
-	
 		
 		public MyJsonTack(Context context){
-			super(context, groupId);
+			super(context, new JsonPostHints(context, groupId));
+			this.context = context;
 			
 		}
 
@@ -90,8 +88,6 @@ public class MainListFragment extends BaseFragment
 		{
 			super.onPreExecute();
 		}
-
-		
 
 		@Override
 		protected void onPostExecute(JSONObject result)
