@@ -36,7 +36,7 @@ public class JsonPostVote extends BaseDownload
 		try {
 			
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(this.url + url);
+			HttpPost httpPost = new HttpPost(url);
 
 			List<NameValuePair> nameValues = new ArrayList<NameValuePair>(3);
 			nameValues.add(new BasicNameValuePair("user_id",String.valueOf(userId)));

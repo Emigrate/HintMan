@@ -15,7 +15,7 @@ public class AddHintActivity extends BaseActivity
 		
 		if(savedInstanceState==null){
 			getSupportFragmentManager().beginTransaction()
-			.replace(R.id.containerFrameLayout, new AddHintFragment())
+			.replace(R.id.containerFrameLayout, new HintAddFragment())
 			.commit();
 		}
 		

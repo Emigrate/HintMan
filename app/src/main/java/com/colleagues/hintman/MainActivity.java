@@ -17,6 +17,8 @@ import java.net.*;
 import java.util.*;
 import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
+import android.support.v7.app.*;
+import android.widget.LinearLayout.*;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -29,22 +31,33 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public CustomAutoCompleteView myAutoComplete;
 	public ArrayList<Group> items;
 	SharedPreferences prefs;
+	ActionBar ab;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_container);
-		close =(ImageView)findViewById(R.id.main_containerImageView);
+		ab = getSupportActionBar();
+		ab.setDefaultDisplayHomeAsUpEnabled(false);
+		ab.setDisplayShowTitleEnabled(false);
+		ab.setDisplayShowCustomEnabled(true);
+		
+		LayoutInflater inflster = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View bar = inflster.inflate(R.layout.action_bar, null);
+		
+		close =(ImageView)bar.findViewById(R.id.main_containerImageView);
+		
 		//getActionBar().setLogo(R.drawable.logo);
-		myAutoComplete = (CustomAutoCompleteView) findViewById(R.id.myautocomplete);
+		myAutoComplete = (CustomAutoCompleteView)bar.findViewById(R.id.myautocomplete);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		groupId = prefs.getLong("_group_id", 0);
 		title = prefs.getString("_group_title", "Deweloper");
 		items = new ArrayList<Group>();
 		try{
 			myListView = (GridView) findViewById(R.id.mainGridView);
-            myAutoComplete.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this));
+            myListView.setNumColumns(1);
+			myAutoComplete.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this));
             myAdapter = new SearchQueriAdapter(this, R.layout.row, items);
             myListView.setAdapter(myAdapter);
 			myListView.setOnItemClickListener(this);
@@ -64,12 +77,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 					saveGroup(0, "");
 					}
 			});
-			
-		
+		ActionBar.LayoutParams params = new ActionBar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		ab.setCustomView(bar, params);
+		myAutoComplete.setText(title);
+		myListView.setVisibility(View.GONE);
+		initView(groupId);
     }
 	
 	private void initView(long groupId){
-		Fragment fragment = new MainListFragment();
+		Fragment fragment = new HintListFragment();
 		Bundle args = new Bundle();
 		args.putLong("group_id", groupId);
 		fragment.setArguments(args);
@@ -86,7 +102,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 		
 			Group item = myAdapter.getItem(p3);
 			saveGroup(item.id, item.title);
-			myListView.setNumColumns(1);
 			myAutoComplete.setText(item.title);
 			myListView.setVisibility(View.GONE);
 			initView(item.id);
@@ -129,7 +144,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 	{
 		// TODO: Implement this method
 		super.onResume();
-		myAutoComplete.setText(title);
+		
 		
 	}
 	
@@ -160,13 +175,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 		
 	}
 
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		 super.onCreateOptionsMenu(menu);
 		 menu.add(0, 2, 0, "Добавить совет");
 		 return true;
-	}
+	}*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)

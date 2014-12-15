@@ -85,4 +85,21 @@ public class JSONParser
 
 		return hint;
 	}
+	
+	public Hint getPushHint(JSONObject jsonIbject){
+		Hint hint = new Hint();
+		try
+		{
+			JSONObject data = jsonIbject.getJSONObject("data");
+			hint.id = data.getLong("hint_id");
+			hint.content = data.getString("alert");
+			hint.grup = data.getString("name");
+		}
+		catch (JSONException e)
+		{
+
+		}
+
+		return hint;
+	}
 }

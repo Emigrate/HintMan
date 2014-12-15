@@ -17,19 +17,44 @@
 
 		<item name="android:actionModeStyle">@style/ActionMode.Material</item>
     </style>
-	
-	<style name="AppTheme.NoBar" parent="@style/Theme.AppCompat.NoActionBar">
-		
-	 	<item name="colorPrimary">@color/window.background</item>
-		<item name="colorPrimaryDark">@color/background</item>
-
-   </style>
 
 	<style name="ActionMode.Material" parent="@style/Widget.AppCompat.ActionMode">
 		<item name="android:background">@color/window.background</item>
 
     </style>
 	
+	<style name="AppTheme.Main" parent="@style/Theme.AppCompat">
+		<item name = "android:actionBarStyle" >@style/MainActionBar</item>
+		<item name = "android:actionBarTabTextStyle" >@style/TabTextStyle</item>
+		<item name = "android:actionMenuTextColor" >@android:color/white</item>
+		<item name = "android:windowBackground">@color/window.background</item>
+		<!-- Support library compatibility -->
+		<item name = "actionBarStyle" >@style/MainActionBar</item>
+		<item name = "actionBarTabTextStyle" >@style/TabTextStyle</item>
+		<item name = "actionMenuTextColor" >@android:color/white</item>
+		<item name = "android:statusBarColor">@color/window.background</item>
+
+	 	<item name="colorPrimary">@color/window.background</item>
+		<item name="colorPrimaryDark">@color/background</item>
+
+		<item name="android:actionModeStyle">@style/ActionMode.Material</item>
+    </style>
+	
+	<style name="MainActionBar" parent= "@style/Widget.AppCompat.ActionBar">
+		<item name = "android:titleTextStyle" >@style/TitleTextStyle</item>
+		<item name = "android:subtitleTextStyle" >@style/SubTitleTextStyle</item>
+		<item name = "android:background" >@color/window.background</item>
+		<item name = "android:backgroundStacked" >@color/window.background</item>
+		<item name = "android:backgroundSplit" >@color/window.background</item>
+
+		<!-- Support library compatibility -->
+		<item name = "titleTextStyle" >@style/TitleTextStyle</item>
+		<item name = "height">180dip</item>
+
+		<item name = "background" >@drawable/backg</item>
+		<item name = "backgroundStacked" >@color/window.background</item>
+		<item name = "backgroundSplit" >@color/window.background</item>
+	</style>
 	<!-- general styles for the action bar -->
 	<style name="MyActionBar" parent= "@style/Widget.AppCompat.ActionBar">
 		<item name = "android:titleTextStyle" >@style/TitleTextStyle</item>
@@ -40,7 +65,7 @@
 		
 		<!-- Support library compatibility -->
 		<item name = "titleTextStyle" >@style/TitleTextStyle</item>
-	
+		
 		<item name = "background" >@color/window.background</item>
 		<item name = "backgroundStacked" >@color/window.background</item>
 		<item name = "backgroundSplit" >@color/window.background</item>

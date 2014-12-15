@@ -46,8 +46,24 @@ public class HintFragment extends BaseFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		id = activity.getIntent().getLongExtra("_id", 0);
+		if(id == 0){
+			String ext = activity.getIntent().getStringExtra("com.parse.Data");
+			if(ext != null){
+				Log.e("hint", "ext: " + ext);
+				try
+				{
+					JSONObject obj = new JSONObject(ext);
+					id = obj.getLong("_id");
+				}
+				catch (JSONException e)
+				{}
+			}
+		}
 		userId = prefs.getLong("_user_id", 0);
 		auth = prefs.getString("auth_token", "");
+		
+		
+		
 		buttonMinus.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -93,8 +109,9 @@ public class HintFragment extends BaseFragment
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
-			JSONParser parser = new JSONParser();
-			setUiData(parser.getHint(result));
+			if(result != null)
+			setUiData(result);
+			
 		}
 		
 		
@@ -123,21 +140,21 @@ public class HintFragment extends BaseFragment
 			progress.show();
 		}
 
-		
-		
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
-			JSONParser parser = new JSONParser();
-			setUiData(parser.getHint(result));
+			if(result != null)
+			setUiData(result);
 			progress.dismiss();
 		}
 		
 		
 	}
 	
-	private void setUiData(Hint hint){
+	private void setUiData(JSONObject jsonObject){
+		JSONParser parser = new JSONParser();
+		Hint hint = parser.getHint(jsonObject);
 		if(hint.content != null && hint.content.length() > 0) {
 		textHint.setText(hint.content);
 		textGroup.setText(hint.grup);
@@ -154,7 +171,8 @@ public class HintFragment extends BaseFragment
 		}else{
 			if(hint.expired){
 				relativeVote.setVisibility(View.GONE);
-			}
+			}else
+				relativeVote.setVisibility(View.VISIBLE);
 		}
 	}}
 	

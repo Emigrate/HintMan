@@ -16,9 +16,10 @@ public class JsonGet extends BaseDownload
 	{
 		InputStream is = null;
 		try {
-
+			Log.e("hint","urlGet: " + url);
+			
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpPost = new HttpGet(this.url + url);
+			HttpGet httpPost = new HttpGet(url);
 
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			HttpEntity httpEntity = httpResponse.getEntity();

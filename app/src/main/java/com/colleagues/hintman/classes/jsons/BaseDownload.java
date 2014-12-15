@@ -28,8 +28,10 @@ public abstract class BaseDownload
 
 	public JSONObject getJSONFromUrl(String url) {
 
+		this.url += url;
+		Log.e("hint","url: " + this.url);
 		is = getInputStrin();
-
+		
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
 			StringBuilder sb = new StringBuilder();
@@ -41,13 +43,13 @@ public abstract class BaseDownload
 			json = sb.toString();
 			
 		} catch (Exception e) {
-			Log.e("Buffer Error", "Error converting result " + e.toString());
+			Log.e("hint", "Error converting result " + e.toString());
 		}
 
 		try {
 			jObj = new JSONObject(json);
 		} catch (JSONException e) {
-			Log.e("JSON Parser", "Error parsing data " + e.toString());
+			Log.e("hint", "Error parsing data " + e.toString());
 		}
 
 		return jObj;

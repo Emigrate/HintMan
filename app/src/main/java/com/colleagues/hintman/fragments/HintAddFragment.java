@@ -10,7 +10,7 @@ import com.colleagues.hintman.classes.tasks.*;
 import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
 
-public class AddHintFragment extends BaseFragment
+public class HintAddFragment extends BaseFragment
 {
 
 	EditText editContent;

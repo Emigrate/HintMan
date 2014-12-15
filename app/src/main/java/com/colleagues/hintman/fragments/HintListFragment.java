@@ -13,13 +13,13 @@ import java.util.*;
 import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
 
-public class MainListFragment extends BaseFragment
+public class HintListFragment extends BaseFragment
 {
 	LinearLayout inflateListLayout;
 	ReaderListView listView;
 	RecyclerViewAdapter adapter;
 	MyJsonTack task;
-	StaggeredGridLayoutManager mLayoutManager;
+	LinearLayoutManager mLayoutManager;
 	long groupId;
 	
 	@Override
@@ -31,11 +31,11 @@ public class MainListFragment extends BaseFragment
 		listView = new ReaderListView(getActivity());
         listView.setHasFixedSize(true);
 		listView.setClickable(true);
-       	mLayoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+       	mLayoutManager = new LinearLayoutManager(getActivity());
        	listView.setLayoutManager(mLayoutManager);
 		listView.setItemAnimator(new DefaultItemAnimator());
         listView.setOnScrollListener(onScroll);
-		mLayoutManager.setSpanCount(1);
+		//mLayoutManager.setSpanCount(1);
 		//Это новый метод для задания divider
         //listView.addItemDecoration(new DividerItemDecoration((BaseActivity)getActivity()));
 
@@ -96,9 +96,13 @@ public class MainListFragment extends BaseFragment
 			if(result != null){
 			JSONParser parser = new JSONParser();
 			ArrayList<Hint>list = parser.getHintsList(result);
+			if(list.size() == 0){
+				Toast.makeText(context, "Ничего не найдено(", 1000).show();
+			}
+			else{
 			adapter = new RecyclerViewAdapter(context, list);
 			listView.setAdapter(adapter);
-			
+			}
 				try
 				{
 					e = prefs.edit();
@@ -115,7 +119,22 @@ public class MainListFragment extends BaseFragment
 	}
 	
 	private RecyclerView.OnScrollListener onScroll = new RecyclerView.OnScrollListener() {
+		/*int mLastFirstVisibleItem = 0;
+		
+		@Override
+		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			super.onScrolled(recyclerView, dx, dy);
+			final int currentFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
+			if (currentFirstVisibleItem > this.mLastFirstVisibleItem) {
+				activity.getSupportActionBar().hide();
+			} else if (currentFirstVisibleItem < this.mLastFirstVisibleItem) {
+				activity.getSupportActionBar().show();
+			}
+
+			this.mLastFirstVisibleItem = currentFirstVisibleItem;
+		}*/
+		
 		@Override
 		public void onScrollStateChanged(RecyclerView recyclerView, int newState)
 		{

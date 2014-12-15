@@ -33,9 +33,10 @@ public class JsonPostHints extends BaseDownload
 	{
 		InputStream is = null;
 		try {
+			Log.e("hint","urlPostHints: " + this.url);
 			
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(this.url + url);
+			HttpPost httpPost = new HttpPost(url);
 
 			List<NameValuePair> nameValues = new ArrayList<NameValuePair>(3);
 			nameValues.add(new BasicNameValuePair("group_id",String.valueOf(groupId)));

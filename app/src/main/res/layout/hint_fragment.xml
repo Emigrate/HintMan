@@ -38,6 +38,7 @@
 
 	</LinearLayout>
 	<RelativeLayout
+		android:visibility="gone"
 		android:id="@+id/hint_fragmentRelativeLayout"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent">

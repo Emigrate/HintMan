@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 		this.parser = parser;
 		this.context = context;
-		//face = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+		face = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 		inflater = (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -54,7 +54,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener
 	{
 
-       // private final TextView itemTitle;		
 		private final TextView itemHint;	
 		private final TextView itemDate;	
 		private final LinearLayout linear;
@@ -62,7 +61,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 		{
             super(view);
 			linear = (LinearLayout)view.findViewById(R.id.hint_itemLinearLayout);
-			//itemTitle = (TextView)view.findViewById(R.id.hint_itemTitleView);
 			itemHint = (TextView)view.findViewById(R.id.hint_itemHintView);
 			itemDate = (TextView)view.findViewById(R.id.hint_itemDateView);
 			linear.setOnClickListener(this);
@@ -81,14 +79,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position)
 	{
-		//Log.e("itc","position: " + position);
 		final Hint item = parser.get(position);
-		
-		
 		
 		if (item.content != null)
 		{
 			holder.itemHint.setText(item.content);
+			holder.itemHint.setTypeface(face);
 		}
 		if(item.date != null){
 			holder.itemDate.setText(item.date);
