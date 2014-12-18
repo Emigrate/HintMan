@@ -12,46 +12,145 @@ import com.colleagues.hintman.view.*;
 import java.util.*;
 import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
+import com.melnykov.fab.FloatingActionButton;
+import android.view.View.*;
+import android.support.v4.app.*;
+import android.graphics.*;
 
-public class HintListFragment extends BaseFragment
+public class HintListFragment extends BaseFragment implements RecyclerViewAdapter.OnClickEvent
 {
-	LinearLayout inflateListLayout;
-	ReaderListView listView;
+
+	FrameLayout inflateListLayout;
+	ReaderListView recyclerView;
 	RecyclerViewAdapter adapter;
+	TextView textEmpty;
 	MyJsonTack task;
-	LinearLayoutManager mLayoutManager;
+	ArrayList<Hint>list;
+	StaggeredGridLayoutManager mLayoutManager;
 	long groupId;
+	String title;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		View v = inflater.inflate(R.layout.main, container, false);
-		inflateListLayout = (LinearLayout) v.findViewById(R.id.mainLinearLayout);
+		View v = inflater.inflate(R.layout.hint_list, container, false);
+		initSrl(v);
+		textEmpty =(TextView)v.findViewById(R.id.hint_listTextEmpty);
+		recyclerView = (ReaderListView)v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+		recyclerView.setClickable(true);
+       	mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+       	
+		recyclerView.setLayoutManager(mLayoutManager);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+       	recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 		
-		listView = new ReaderListView(getActivity());
-        listView.setHasFixedSize(true);
-		listView.setClickable(true);
-       	mLayoutManager = new LinearLayoutManager(getActivity());
-       	listView.setLayoutManager(mLayoutManager);
-		listView.setItemAnimator(new DefaultItemAnimator());
-        listView.setOnScrollListener(onScroll);
+		//listView.setOnScrollListener(onScroll);
 		//mLayoutManager.setSpanCount(1);
 		//Это новый метод для задания divider
-        //listView.addItemDecoration(new DividerItemDecoration((BaseActivity)getActivity()));
+        //listView.addItemDecoration(new Divi);
 
-        inflateListLayout.addView(listView);
+		FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+		fab.attachToRecyclerView(recyclerView);
+		fab.setType(fab.TYPE_MINI);
+		fab.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View p1)
+				{
+					Fragment fragment = HintAddFragment.getHintAddFragment(groupId);
+				
+						activity.getSupportFragmentManager().beginTransaction()
+							.replace(R.id.main_containerFrameLayout, fragment)
+							.addToBackStack(null)
+							.commit();
+					
+				}
+			});
 		
 		return v;
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
+	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
-		super.onActivityCreated(savedInstanceState);
-		groupId = getArguments().getLong("group_id");
+		super.onViewCreated(view, savedInstanceState);
+		
+		setupRecyclerAdapter();
 		getJson(groupId);
 	}
+	
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		groupId = getArguments().getLong("group_id");
+		title = getArguments().getString("group_title");
+		list = getCurentData();
+		
+	}
+	
+	
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		setupActionBar(false);
+		//ab.setHomeAsUpIndicator(R.drawable.ic_navigation_drawer);
+	}
+	
+	
+	
+	private void setupRecyclerAdapter(){
+		adapter = new RecyclerViewAdapter(activity, list, recyclerView);
+		adapter.setOnClickEvent(this);
+		adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+				@Override
+				public void onChanged() {
+					super.onChanged();
+					checkAdapterIsEmpty();
+				}
+			});
+		recyclerView.setAdapter(adapter);
+		
+	}
+	
+	private void checkAdapterIsEmpty () {
+        if (adapter.getItemCount() == 0) {
+            textEmpty.setVisibility(View.VISIBLE);
+        } else {
+            textEmpty.setVisibility(View.GONE);
+        }
+    }
+	
+	@Override
+	public void onClick(View v, int position)
+	{
+		Hint hint = list.get(position);
+		Fragment fragment = HintFragment.getHintFragment(hint.id, hint.content);
+		activity.getSupportFragmentManager().beginTransaction()
+			.addToBackStack(null)
+			.replace(R.id.main_containerFrameLayout, fragment)
+			.commit();
+	}
+
+	@Override
+	public void onRefresh()
+	{
+		super.onRefresh();
+		getJson(groupId);
+	}
+	
+	
 	
 	private void getJson(long id){
 		
@@ -68,11 +167,19 @@ public class HintListFragment extends BaseFragment
 		}
 		
 	}
+	
+	public ArrayList<Hint> getCurentData()
+	{
+		Serializator<Hint> serializatorUser = new Serializator<Hint>(activity, title);
+		list = serializatorUser.getSerialization();
+		return list;
+	}
 
-
-	
-	
-	
+	public void setCurentData(ArrayList<Hint> data)
+	{
+		Serializator<Hint> factory = new Serializator<Hint>(activity, title);
+		factory.inSerialize(data);
+	}
 	
 	public class MyJsonTack extends BaseTask
 	{
@@ -87,22 +194,22 @@ public class HintListFragment extends BaseFragment
 		protected void onPreExecute()
 		{
 			super.onPreExecute();
+			setProgress(true);
 		}
+		
+		
 
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
+			setProgress(false);
 			if(result != null){
 			JSONParser parser = new JSONParser();
-			ArrayList<Hint>list = parser.getHintsList(result);
-			if(list.size() == 0){
-				Toast.makeText(context, "Ничего не найдено(", 1000).show();
-			}
-			else{
-			adapter = new RecyclerViewAdapter(context, list);
-			listView.setAdapter(adapter);
-			}
+			list = parser.getHintsList(result);
+			adapter.changeData(list);
+			setCurentData(list);
+			checkAdapterIsEmpty();
 				try
 				{
 					e = prefs.edit();

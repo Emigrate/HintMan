@@ -37,7 +37,7 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher{
         
         MainActivity mainActivity = ((MainActivity) context);
 		
-		mainActivity.showListView();
+		mainActivity.showClearButton();
         // query the database based on the user input
         mainActivity.getItemsFromDb(userInput.toString());
 

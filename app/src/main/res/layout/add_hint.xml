@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:padding="10dip"
-	android:background="#ffffff"
-	android:orientation="vertical">
+	xmlns:fab="http://schemas.android.com/apk/res-auto"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:background="@color/background"
+	
+	>
 
-	<EditText
+	<com.melnykov.fab.ObservableScrollView
+		android:id="@+id/add_hintScrollView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="vertical">
+
+			<EditText
+				android:layout_height="match_parent"
+				android:textColor="#333333"
+				android:id="@+id/add_hintEditText"
+				android:layout_width="match_parent"/>
+
+		</LinearLayout>
+	</com.melnykov.fab.ObservableScrollView>
+	
+	<com.melnykov.fab.FloatingActionButton
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:inputType="textMultiLine"
-		android:minLines="5"
-		
-		android:id="@+id/add_hintEditText"
-		android:layout_width="match_parent"/>
-
-	<Button
-		android:layout_gravity="right"
-		android:layout_height="wrap_content"
-		android:text="Отправить"
-		android:id="@+id/add_hintButton"
-		android:layout_width="wrap_content"/>
-
-</LinearLayout>
+		android:layout_gravity="bottom|right"
+		android:layout_margin="16dp"
+		android:src="@drawable/ic_add_white_24dp"
+		fab:fab_colorNormal="@color/accent"
+		fab:fab_colorPressed="@color/accent_pressed"
+		fab:fab_colorRipple="@color/ripple"/>
+</FrameLayout>
 

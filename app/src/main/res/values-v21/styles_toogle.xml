@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Toolbar" parent="@style/AppTheme.Main.NoActionBar">
+    </style>
+
+    <!--styling color for arrow-->
+ 
+
+</resources>

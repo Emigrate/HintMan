@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.DrawerLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="match_parent"
+	android:id="@+id/drawer_layout"
 	android:layout_width="match_parent"
-	android:background="#ffffff"
-	android:orientation="vertical">
-
-	<FrameLayout
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content">
+	android:layout_height="match_parent">
+	
+	<LinearLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+		<include
+			layout="@layout/toolbar"/>
+		<include
+			layout="@layout/action_bar"/>
 
 		<FrameLayout
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:id="@+id/main_containerFrameLayout">
+			android:id="@+id/main_containerFrameLayout"/>
+	</LinearLayout>
+	<FrameLayout
+		android:background="#ffffff"
+		android:id="@+id/drawerFrameLayout"
+		android:layout_height="match_parent"
+		android:layout_gravity="start"
+		android:layout_width="wrap_content">
 
-		</FrameLayout>
-		<GridView
-			android:visibility="gone"
-			android:clipToPadding="false"
-			android:fitsSystemWindows="true"
-			android:layout_height="wrap_content"
-			android:id="@+id/mainGridView"
-			android:layout_width="match_parent"
-			android:scrollbarStyle="outsideOverlay"
-			android:gravity="center"
-			android:scrollbars="none"
-			android:drawSelectorOnTop="true"
-			android:stretchMode="columnWidth"
-			android:numColumns="auto_fit"/>
-		
+		<ListView
+			android:id="@+id/list_drawer"
+			android:layout_width="300dp"
+
+			android:layout_height="match_parent"
+			android:divider="@null"
+			android:layout_weight="1.0"/>
 
 	</FrameLayout>
 
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>
 

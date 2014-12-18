@@ -93,7 +93,6 @@ public class JSONParser
 			JSONObject data = jsonIbject.getJSONObject("data");
 			hint.id = data.getLong("hint_id");
 			hint.content = data.getString("alert");
-			hint.grup = data.getString("name");
 		}
 		catch (JSONException e)
 		{

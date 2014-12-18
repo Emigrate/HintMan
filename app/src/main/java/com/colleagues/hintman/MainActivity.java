@@ -4,11 +4,15 @@ import android.content.*;
 import android.os.*;
 import android.preference.*;
 import android.support.v4.app.*;
+import android.support.v4.widget.*;
+import android.support.v7.app.*;
+import android.support.v7.widget.*;
 import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 import com.colleagues.hintman.activity.*;
 import com.colleagues.hintman.classes.*;
+import com.colleagues.hintman.classes.jsons.*;
 import com.colleagues.hintman.classes.tasks.*;
 import com.colleagues.hintman.fragments.*;
 import com.colleagues.hintman.objects.*;
@@ -16,58 +20,57 @@ import com.colleagues.hintman.view.*;
 import java.net.*;
 import java.util.*;
 import org.json.*;
-import com.colleagues.hintman.classes.jsons.*;
-import android.support.v7.app.*;
-import android.widget.LinearLayout.*;
+
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.content.res.*;
+import android.util.*;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
-	public GridView myListView;
+	private FrameLayout frameDrawer;
+	private DrawerLayout mDrawerLayout ;
+	private ListView mDrawerList ;
+	private Toolbar mToolbar;
+	
 	ImageView close;
 	long groupId;
 	String title;
 	private ReadSearchTask readSearchTask;
     public SearchQueriAdapter myAdapter;
-    public CustomAutoCompleteView myAutoComplete;
+    public AutoCompleteTextView myAutoComplete;
 	public ArrayList<Group> items;
 	SharedPreferences prefs;
-	ActionBar ab;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_container);
-		ab = getSupportActionBar();
-		ab.setDefaultDisplayHomeAsUpEnabled(false);
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setDisplayShowCustomEnabled(true);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		mDrawerLayout = (DrawerLayout) findViewById(R .id. drawer_layout);
+		mDrawerList = (ListView) findViewById(R .id. list_drawer);
+		frameDrawer = (FrameLayout)findViewById(R.id.drawerFrameLayout);
+		close = (ImageView)findViewById(R.id.main_containerImageView);
+		myAutoComplete = (AutoCompleteTextView)findViewById(R.id.myautocomplete);
 		
-		LayoutInflater inflster = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View bar = inflster.inflate(R.layout.action_bar, null);
+		if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+		}
 		
-		close =(ImageView)bar.findViewById(R.id.main_containerImageView);
-		
-		//getActionBar().setLogo(R.drawable.logo);
-		myAutoComplete = (CustomAutoCompleteView)bar.findViewById(R.id.myautocomplete);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		groupId = prefs.getLong("_group_id", 0);
 		title = prefs.getString("_group_title", "Deweloper");
 		items = new ArrayList<Group>();
-		try{
-			myListView = (GridView) findViewById(R.id.mainGridView);
-            myListView.setNumColumns(1);
-			myAutoComplete.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this));
-            myAdapter = new SearchQueriAdapter(this, R.layout.row, items);
-            myListView.setAdapter(myAdapter);
-			myListView.setOnItemClickListener(this);
 
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		
+		myAutoComplete.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this));
+
+		myAdapter = new SearchQueriAdapter(this, R.layout.row, items);
+
+		myAutoComplete.setAdapter(myAdapter);
+
+		myAutoComplete.setOnItemClickListener(this);
+
 		close.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -75,40 +78,44 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 				{
 					myAutoComplete.setText("");
 					saveGroup(0, "");
-					}
+				}
 			});
-		ActionBar.LayoutParams params = new ActionBar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		ab.setCustomView(bar, params);
-		myAutoComplete.setText(title);
-		myListView.setVisibility(View.GONE);
-		initView(groupId);
+	
+		setTitle(title);
+		setTitleColor(R.color.white);
+		
+		initView(groupId, title);
     }
 	
-	private void initView(long groupId){
+
+	private void initView(long groupId, String title)
+	{
+		if (groupId == 0)
+			return;
 		Fragment fragment = new HintListFragment();
 		Bundle args = new Bundle();
 		args.putLong("group_id", groupId);
+		args.putString("group_title", title);
 		fragment.setArguments(args);
-		
+
 		getSupportFragmentManager().beginTransaction()
-		.replace(R.id.main_containerFrameLayout, fragment)
-		.commit();
-		
+			.replace(R.id.main_containerFrameLayout, fragment)
+			.commit();
+
 	}
-	
+
 	@Override
 	public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
 	{
-		
-			Group item = myAdapter.getItem(p3);
-			saveGroup(item.id, item.title);
-			myAutoComplete.setText(item.title);
-			myListView.setVisibility(View.GONE);
-			initView(item.id);
-			
+		Group item = myAdapter.getItem(p3);
+		saveGroup(item.id, item.title);
+		myAutoComplete.setText(item.title);
+		initView(item.id, item.title);
+		items.clear();
 	}
-	
-	void saveGroup(long id, String title){
+
+	void saveGroup(long id, String title)
+	{
 		SharedPreferences.Editor e = prefs.edit();
 		e.putLong("_group_id", id);
 		e.putString("_group_title", title);
@@ -118,89 +125,69 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 		invalidateOptionsMenu();
 	}
 
-    
-    public void getItemsFromDb(String searchTerm){
-		if(searchTerm.length() == 0){
-			hideListView();
+
+    public void getItemsFromDb(String searchTerm)
+	{
+		if (searchTerm.length() == 0)
+		{
 			close.setVisibility(View.GONE);
-			
 			return;
 		}
 		saveGroup(groupId, searchTerm);
 		readSearchTask = new ReadSearchTask(this);
 		readSearchTask.execute("api/v1/groups.json?limit=10&q=" + URLEncoder.encode(searchTerm));
     }
-	
-	public void hideListView(){
-		myListView.setVisibility(View.GONE);
-	}
-	public void showListView(){
+
+
+	public void showClearButton()
+	{
 		close.setVisibility(View.VISIBLE);
-		myListView.setVisibility(View.VISIBLE);
 	}
 
-	@Override
-	protected void onResume()
-	{
-		// TODO: Implement this method
-		super.onResume();
-		
-		
-	}
-	
-	
-	
+
 	public class ReadSearchTask extends BaseTask
 	{
-		public ReadSearchTask(Context context){
+		public ReadSearchTask(Context context)
+		{
 			super(context, new JsonGet());
 		}
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
-		
+
 			super.onPostExecute(result);
-			if(result != null){
-			JSONParser parser = new JSONParser();
-			items = parser.getGroupList(result);
-			
-			if(items.size() == 0)
-				myListView.setVisibility(View.GONE);
-			
-			myAdapter.notifyDataSetChanged();
-			myAdapter = new SearchQueriAdapter(MainActivity.this, R.layout.row, items);
-			myListView.setAdapter(myAdapter);
+			if (result != null)
+			{
+				JSONParser parser = new JSONParser();
+				items = parser.getGroupList(result);
+
+
+				myAdapter.notifyDataSetChanged();
+				myAdapter = new SearchQueriAdapter(MainActivity.this, R.layout.row, items);
+				myAutoComplete.setAdapter(myAdapter);
 			}
 		}
-		
-	}
 
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		 super.onCreateOptionsMenu(menu);
-		 menu.add(0, 2, 0, "Добавить совет");
-		 return true;
-	}*/
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		// TODO: Implement this method
-		 super.onOptionsItemSelected(item);
-		 switch(item.getItemId()){
-			 case 2:
-				 Intent i = new Intent(this, AddHintActivity.class);
-				 i.putExtra("_group_id", groupId);
-				 startActivity(i);
-		 }
-		 
-		 return true;
-	}
-	
+		super.onOptionsItemSelected(item);
+		if(!App.getInstance().asUs){
+			mDrawerLayout.openDrawer(frameDrawer);
+			return true;
+		}
+		
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				onBackPressed();
+			break;
+		}
 
-	
-		
-		
+		return true;
+	}
+
 	
 }

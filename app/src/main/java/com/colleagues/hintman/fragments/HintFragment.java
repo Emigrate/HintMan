@@ -12,40 +12,45 @@ import com.colleagues.hintman.classes.tasks.*;
 import com.colleagues.hintman.objects.*;
 import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.FloatingRelativeLayout;
+import com.melnykov.fab.ObservableScrollView;
+import android.support.v7.widget.*;
 
 public class HintFragment extends BaseFragment
 {
+	FloatingActionButton buttonMinus;
+	FloatingActionButton buttonPlus;
+	ObservableScrollView sctollView;
 	TextView textHint;
 	TextView textDate;
 	TextView textGroup;
-	RelativeLayout relativeVote;
-	ImageView buttonMinus;
-	ImageView buttonPlus;
+	TextView voteView;
+	CardView cardView;
+	FloatingRelativeLayout relativeVote;
+	
 	HintTask hintTask;
 	long id;
 	long userId;
+	String content;
 	String auth;
 
+	public static HintFragment getHintFragment(long id, String content){
+		HintFragment fragment = new HintFragment();
+		Bundle args = new Bundle();
+		args.putLong("_id", id);
+		args.putString("_content", content);
+		fragment.setArguments(args);
+		return fragment;
+	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreateView(inflater, container, savedInstanceState);
-		View v = inflater.inflate(R.layout.hint_fragment, container, false);
-		textGroup =(TextView)v.findViewById(R.id.hint_fragmentGroupView);
-		textHint =(TextView)v.findViewById(R.id.hint_fragmentHintView);
-		textDate =(TextView)v.findViewById(R.id.hint_fragmentDataView);
-		buttonMinus = (ImageView)v.findViewById(R.id.hint_buttonMinus);
-		buttonPlus = (ImageView)v.findViewById(R.id.hint_buttonPlus);
-		relativeVote = (RelativeLayout)v.findViewById(R.id.hint_fragmentRelativeLayout);
-		return v;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		id = activity.getIntent().getLongExtra("_id", 0);
+		super.onCreate(savedInstanceState);
+		
+		id = getArguments().getLong("_id", 0);
+		content = getArguments().getString("_content");
 		if(id == 0){
 			String ext = activity.getIntent().getStringExtra("com.parse.Data");
 			if(ext != null){
@@ -62,8 +67,22 @@ public class HintFragment extends BaseFragment
 		userId = prefs.getLong("_user_id", 0);
 		auth = prefs.getString("auth_token", "");
 		
-		
-		
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		super.onCreateView(inflater, container, savedInstanceState);
+		View v = inflater.inflate(R.layout.hint_fragment, container, false);
+		initSrl(v);
+		sctollView =(ObservableScrollView)v.findViewById(R.id.hint_hintScrollView);
+		cardView =(CardView)v.findViewById(R.id.cardView);
+		voteView =(TextView)v.findViewById(R.id.hint_fragmentVoteView);
+		textGroup =(TextView)v.findViewById(R.id.hint_fragmentGroupView);
+		textHint =(TextView)v.findViewById(R.id.hint_fragmentHintView);
+		textDate =(TextView)v.findViewById(R.id.hint_fragmentDataView);
+		buttonMinus = (FloatingActionButton) v.findViewById(R.id.hint_buttonMinus);
+		buttonMinus.setType(buttonMinus.TYPE_MINI);
 		buttonMinus.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -72,6 +91,8 @@ public class HintFragment extends BaseFragment
 					setVote("down");
 				}
 			});
+		buttonPlus = (FloatingActionButton) v.findViewById(R.id.hint_buttonPlus);
+		buttonPlus.setType(buttonPlus.TYPE_MINI);
 		buttonPlus.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -80,7 +101,37 @@ public class HintFragment extends BaseFragment
 					setVote("up");
 				}
 			});
-		
+			
+		relativeVote = (FloatingRelativeLayout)v.findViewById(R.id.hint_fragmentRelativeLayout);
+		relativeVote.hide();
+		return v;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState)
+	{
+		super.onViewCreated(view, savedInstanceState);
+		if(content!= null){
+		cardView.setVisibility(View.VISIBLE);
+		textHint.setText(content);
+		}
+		getHint();
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		setupActionBar(true);
+	}
+
+	
+	
+
+	@Override
+	public void onRefresh()
+	{
+		super.onRefresh();
 		getHint();
 	}
 	
@@ -88,7 +139,6 @@ public class HintFragment extends BaseFragment
 		String url = "api/v1/hints/" + id +".json?auth_token=" + auth + "&"+"user_id=" +userId;
 		hintTask = new HintTask(activity);
 		hintTask.execute(url);
-		Log.e("hint", "url: " + url);
 	}
 	
 	public class HintTask extends BaseTask
@@ -102,19 +152,19 @@ public class HintFragment extends BaseFragment
 		protected void onPreExecute()
 		{
 			super.onPreExecute();
-			
+			setProgress(true);
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject result)
 		{
 			super.onPostExecute(result);
-			if(result != null)
-			setUiData(result);
-			
+			setProgress(false);
+			if(result != null){
+				relativeVote.attachToScrollView(sctollView);
+				setUiData(result);
+			}
 		}
-		
-		
 	}
 	
 	
@@ -156,10 +206,11 @@ public class HintFragment extends BaseFragment
 		JSONParser parser = new JSONParser();
 		Hint hint = parser.getHint(jsonObject);
 		if(hint.content != null && hint.content.length() > 0) {
+		relativeVote.show(true);
 		textHint.setText(hint.content);
 		textGroup.setText(hint.grup);
 		textDate.setText(hint.date);
-
+		cardView.setVisibility(View.VISIBLE);
 		if(hint.voted){
 			buttonMinus.setEnabled(false);
 			buttonPlus.setEnabled(false);
@@ -170,9 +221,12 @@ public class HintFragment extends BaseFragment
 			}
 		}else{
 			if(hint.expired){
-				relativeVote.setVisibility(View.GONE);
-			}else
-				relativeVote.setVisibility(View.VISIBLE);
+				relativeVote.hide(true);
+				voteView.setVisibility(View.VISIBLE);
+			}else{
+				relativeVote.show(true);
+				voteView.setVisibility(View.GONE);
+			}
 		}
 	}}
 	

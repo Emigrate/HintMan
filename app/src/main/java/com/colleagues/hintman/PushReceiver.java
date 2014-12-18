@@ -11,42 +11,41 @@ public class PushReceiver extends ParsePushBroadcastReceiver
 {
 
 	@Override
-	public void onReceive(Context context, Intent intent)
+	protected void onPushReceive(Context context, Intent intent)
 	{
-		// TODO: Implement this method
-		super.onReceive(context, intent);
+		super.onPushReceive(context, intent);
 		String url = intent.getStringExtra(KEY_PUSH_DATA);
+		Log.e("hint", "pushedResive: " + url);
+		Log.e("hint", "extras: " + intent.getExtras().toString());
+		Log.e("hint", "action: " + intent.getAction());
 		Log.e("hint", "receive: " + url);
-		try
-		{
-			JSONObject obj = new JSONObject(url);
-			JSONParser parser = new JSONParser();
-			Hint hint = parser.getPushHint(obj);
-			PushNotification notif = new PushNotification(context);
-			NotificationManagerCompat.from(context).notify(0, notif.getNotificstion(hint.id, hint.content,hint.grup));
-			
-		}
-		catch (JSONException e)
-		{
-			Log.e("hint", e.getMessage());
-		}
+		
 		
 	}
 
-	
-	
-	
-	
- @Override
- public void onPushOpen(Context context, Intent intent) {
-	 String url = intent.getStringExtra(KEY_PUSH_DATA);
-	 Log.e("hint", "pushed: " + url);
-	 
- Intent i = new Intent(context, HintActivity.class);
- i.putExtras(intent.getExtras());
- i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
- context.startActivity(i);
- }
- 
-	
+	@Override
+	protected void onPushDismiss(Context context, Intent intent)
+	{
+		super.onPushDismiss(context, intent);
+		String url = intent.getStringExtra(KEY_PUSH_DATA);
+		Log.e("hint", "pushedDismis: " + url);
+		
+	}
+
+	@Override
+	public void onPushOpen(Context context, Intent intent)
+	{
+		
+		Log.e("hint", "pushedOpen: ");
+			Intent i = new Intent(context, HintActivity.class);
+			i.putExtras(intent.getExtras());
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(i);
+			//PushNotification notif = new PushNotification(context);
+			//NotificationManagerCompat.from(context).notify(0, notif.getNotificstion(hint.id, hint.content, hint.grup));
+
+		
+	}
+
+
 }

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="Pressed.Default">#55cccccc</color>
-<color name="Transparent">#ffffff</color>
-<color name="Focused.Default">#55ffffff</color>
-	
-<color name="red">#55EC122C</color>
-<color name="green">#553E8A0B</color>
-	<color name="window.background">#00838f</color>
-	<color name="background">#004343</color>
-	<color name="sublit.background">#4e2923</color>
-	<color name="row">#C8C8C8</color>
-	<color name="progress_one">#ffffff</color>
-    <color name="progress_two">#b2b2b2</color>
-	<color name="pressed">#40000000</color>
-	<color name="item_color">#b2b2b2</color>
-	<color name="title">#666666</color>
-	<color name="background_tab_pressed">#6633B5E5</color>
-	<color name="Pressed.Default">#55cccccc</color>
+	<color name="Pressed.Default">#cccccc</color>
 	<color name="Transparent">#00ffffff</color>
-	<color name="Focused.Default">#55ffffff</color>
+	<color name="Focused.Default">#cccccc</color>
+	<color name="background">#e5e5e5</color>
+	<color name="primary">#00838f</color>
+    <color name="primary_pressed">#004343</color>
+    <color name="ripple">#ff80ab</color>
+    <color name="accent">#0593A4</color>
+    <color name="accent_pressed">#00838f</color>
+	
+	<color name="red">#E40F1E</color>
+	<color name="green">#00838f</color>
+	<color name="white">#ffffff</color>
+	
+	<color name="minus">#E90F01</color>
+    <color name="minus_pressed">#921600</color>
+	<color name="plus">#00B700</color>
+    <color name="plus_pressed">#009200</color>
+	
 	
 </resources>
 

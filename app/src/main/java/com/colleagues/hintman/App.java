@@ -4,6 +4,7 @@ import com.parse.*;
 
 public class App extends Application
 {
+	public static boolean asUs = false;
 	private static App INSTANCE = null;
 
 	public App() {
