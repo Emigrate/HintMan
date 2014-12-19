@@ -19,7 +19,6 @@ import android.graphics.*;
 
 public class HintListFragment extends BaseFragment implements RecyclerViewAdapter.OnClickEvent
 {
-
 	FrameLayout inflateListLayout;
 	ReaderListView recyclerView;
 	RecyclerViewAdapter adapter;
@@ -76,11 +75,15 @@ public class HintListFragment extends BaseFragment implements RecyclerViewAdapte
 	{
 		super.onViewCreated(view, savedInstanceState);
 		
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
 		setupRecyclerAdapter();
 		getJson(groupId);
 	}
-	
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -91,21 +94,12 @@ public class HintListFragment extends BaseFragment implements RecyclerViewAdapte
 		list = getCurentData();
 		
 	}
-	
-	
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-	}
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		setupActionBar(false);
-		//ab.setHomeAsUpIndicator(R.drawable.ic_navigation_drawer);
+		setupHomeAsUp(false);
 	}
 	
 	

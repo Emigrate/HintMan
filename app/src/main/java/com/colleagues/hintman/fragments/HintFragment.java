@@ -122,7 +122,7 @@ public class HintFragment extends BaseFragment
 	public void onResume()
 	{
 		super.onResume();
-		setupActionBar(true);
+		setupHomeAsUp(true);
 	}
 
 	

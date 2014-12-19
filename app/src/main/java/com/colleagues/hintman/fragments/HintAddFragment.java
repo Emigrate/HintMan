@@ -11,6 +11,9 @@ import org.json.*;
 import com.colleagues.hintman.classes.jsons.*;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
+import java.io.*;
+import java.util.*;
+import android.util.*;
 
 public class HintAddFragment extends BaseFragment
 {
@@ -45,13 +48,30 @@ public class HintAddFragment extends BaseFragment
 				@Override
 				public void onClick(View p1)
 				{
-					String content = editContent.getText().toString();
+					String content = prepareContent(editContent.getText().toString());
 					if(content.length() >0){
 						new AddHintTask(activity, groupId, content).execute("api/v1/hints.json");
 					}else
 						Toast.makeText(activity, "Пожалуйста введите совет",1000).show();
 				}
-			});return v;
+			});
+		return v;
+	}
+	
+	private String prepareContent(String content){
+		StringBuilder builder = new StringBuilder();
+		String[] array = content.split("[\n]");
+		String line;  
+		int length = array.length;
+		for(int i =0; i < length; i++){
+			line = array[i];
+			if(line.length() >0){
+				builder.append(line);
+				if(i != length-1)
+					builder.append("\n");
+			}
+		}
+		return builder.toString();
 	}
 
 	@Override
@@ -66,7 +86,7 @@ public class HintAddFragment extends BaseFragment
 	public void onResume()
 	{
 		super.onResume();
-		setupActionBar(true);
+		setupHomeAsUp(true);
 	}
 	
 	

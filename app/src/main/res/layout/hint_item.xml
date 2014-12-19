@@ -16,6 +16,7 @@
 			android:textColor="#333333"
 			android:textSize="16dip"
 			android:padding="10dip"
+			android:maxLines="5"
 			android:id="@+id/hint_itemHintView"
 			android:layout_height="wrap_content"
 			android:text="Text"

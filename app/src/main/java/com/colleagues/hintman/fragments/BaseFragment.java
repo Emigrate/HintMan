@@ -25,23 +25,20 @@ public class BaseFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		super.onCreate(savedInstanceState);
 		activity = (BaseActivity)getActivity();
 		ab = activity.getSupportActionBar();
-		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		ab.setDisplayHomeAsUpEnabled(true);
 		ab.setHomeButtonEnabled(true);
+		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 	
-	public void setupActionBar(boolean show){
+	public void setupHomeAsUp(boolean show){
 		App.getInstance().asUs = show;
 		if(!show){
 			ab.setHomeAsUpIndicator(R.drawable.ic_navigation_drawer);
 		}else{
 			ab.setDisplayHomeAsUpEnabled(false);
-			ab.setHomeButtonEnabled(false);
 			ab.setDisplayHomeAsUpEnabled(true);
-			ab.setHomeButtonEnabled(true);
 		}
 	}
-	
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
@@ -61,13 +58,20 @@ public class BaseFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		return srl.isRefreshing();
 	}
 	
-	public void setProgress(boolean show){
-		srl.setRefreshing(show);
+	public void setProgress(final boolean show){
+		srl.post(new Runnable(){
+
+				@Override
+				public void run()
+				{
+					srl.setRefreshing(show);
+				}
+			});
+		
 	}
 	
 	@Override
-	public void onRefresh()
-	{}
+	public void onRefresh(){}
 	
 	
 }
